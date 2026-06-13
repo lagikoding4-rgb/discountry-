@@ -442,6 +442,14 @@
 <div id="toast"><i class="ti ti-check"></i> <span id="toastMsg"></span></div>
 
 <script>
+const supabaseUrl = "https://wkjsjxtukpxawjvtpoie.supabase.co";
+const supabaseKey = "sb_publishable_qbvqMdYjvy6TfMI82FuQ3Q_NP7f0HMD";
+
+const supabase = window.supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+);
+
 // ============ DATABASE (localStorage) ============
 const DB = {
   get(key, def=[]) {
@@ -686,16 +694,28 @@ function renderSaran() {
 }
 
 // ============ ACTIONS ============
-function kirimKritik() {
+async function kirimKritik() {
   const isi = document.getElementById('isiKritik').value.trim();
   if (!isi) return;
-  const data = DB.get('kritik');
-  data.unshift({ id:uid(), namaIC:S.user.namaIC, ucp:S.user.ucp, isi, tanggal:hari(), balasan:'' });
-  DB.set('kritik', data);
+
+  const { error } = await supabase
+    .from('kritik')
+    .insert({
+      namaic: S.user.namaIC,
+      ucp: S.user.ucp,
+      isi: isi,
+      tanggal: hari(),
+      balasan: ''
+    });
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
   document.getElementById('isiKritik').value = '';
-  renderKritik();
   toast('Kritik berhasil dikirim!');
-}
+ }
 
 function kirimSaran() {
   const isi = document.getElementById('isiSaran').value.trim();
@@ -793,6 +813,6 @@ document.addEventListener('keydown', e => {
     else loginPlayer();
   }
 });
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>
