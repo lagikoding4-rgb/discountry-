@@ -330,6 +330,8 @@
   </div>
 </div>
 
+<input type="file" id="fileInput" accept="image/*,video/*" hidden>
+ 
 <!-- MAIN APP -->
 <div id="mainApp" class="hidden">
   <div class="topbar">
@@ -810,6 +812,13 @@ document.addEventListener('keydown', e => {
     else loginPlayer();
   }
 });
+</script>
+<script>
+
+function openGallery() {
+  document.getElementById("fileInput").click();
+}
+
 </script>
 </body>
 </html>
